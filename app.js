@@ -3,6 +3,7 @@ const socket = require("socket.io");
 const http = require("http");
 const {Chess} = require("chess.js");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
@@ -72,21 +73,17 @@ io.on("connection", function(uniquesocket){
         }
         else{
             console.log("Inavalid move", move);
-            uniquesocket.id("invalidMove", move);
+            uniquesocket.emit("invalidMove", move);
         }
         } catch (error) {
             console.log(error);
             uniquesocket.emit("invalidMove", move);
         }
-    })
-
-
-
-
-
-
+    }) 
 });
 
-server.listen(3000, function() {
-    console.log("listening on PORT 3000");
+const PORT = process.env.PORT || 3000;  
+
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
